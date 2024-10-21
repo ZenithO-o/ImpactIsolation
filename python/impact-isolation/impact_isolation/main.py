@@ -2,9 +2,9 @@ import logging
 import sys
 from collections import Counter
 
-from tqdm import tqdm
-
 from impact_isolation.game import Agent, Isolation, IsolationConfig
+from impact_isolation.render.render import InteractiveRender
+from tqdm import tqdm
 
 if __name__ == "__main__":
     root_logger = logging.getLogger()
@@ -14,17 +14,23 @@ if __name__ == "__main__":
     )
     stdout_handler.setFormatter(log_formatter)
     root_logger.addHandler(stdout_handler)
-    root_logger.setLevel(logging.ERROR)
+    root_logger.setLevel(logging.DEBUG)
 
-    winner_counter = Counter()
+    agents = [Agent((2, 2)), Agent((3, 3)), Agent((9, 9)), Agent((6, 6)), Agent((7, 7))]
+    config = IsolationConfig(board_size=10, agents=agents)
+    game = Isolation(config)
 
-    wins = []
+    InteractiveRender(game)
 
-    for i in tqdm(range(1000)):
-        config = IsolationConfig(board_size=5, agents=[Agent((0, 0)), Agent((1, 1))])
-        game = Isolation(config)
-        game.run()
-        win = game.get_winner()
-        wins.append(win)
+    # winner_counter = Counter()
 
-    print(Counter(wins))
+    # wins = []
+
+    # for i in tqdm(range(1000)):
+    #     config = IsolationConfig(board_size=5, agents=[Agent((0, 0)), Agent((1, 1))])
+    #     game = Isolation(config)
+    #     game.run()
+    #     win = game.get_winner()
+    #     wins.append(win)
+
+    # print(Counter(wins))

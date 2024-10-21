@@ -23,6 +23,7 @@ class Isolation:
             True if len(agent.valid_moves()) > 0 else False for agent in self.agents
         ]
         self.current_turn = 0
+        self.game_finished = False
         self.num_players = len(self.agents)
 
     def _make_turn(self) -> None:
@@ -34,6 +35,10 @@ class Isolation:
                 f"Agent {self.current_turn} has no valid moves and is out of the game!"
             )
             self.has_moves[self.current_turn] = False
+            if sum(self.has_moves) == 1:
+                self.game_finished = True
+            
+            self.current_turn = (self.current_turn + 1) % self.num_players
             return
 
         move = curr_agent.make_move()
@@ -43,8 +48,7 @@ class Isolation:
             raise RuntimeError(f"Agent {self.current_turn} returned invalid move!")
 
         self.board._fill_position(curr_agent._position)
-
-        logger.debug(self.board._board)
+        self.current_turn = (self.current_turn + 1) % self.num_players
 
     def run(self):
         while True:
@@ -56,8 +60,8 @@ class Isolation:
                 except Exception as e:
                     logger.error(e)
 
-                if sum(self.has_moves) == 1:
-                    return
-
     def get_winner(self) -> int:
-        return self.has_moves.index(True)
+        if self.game_finished:
+            return self.has_moves.index(True)
+        
+        return -1

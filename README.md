@@ -14,7 +14,7 @@ Now, to turn this into *Impact* Isolation, you just have to add one more rule.
 
 4. If you move more than 1 cell, then a 1 cell "crater" forms around you, blocking you in the horizontal/vertical directions.
 
-The rules are very to the [Angel Problem](https://en.wikipedia.org/wiki/Angel_problem), except the two agents are pitted against another in containing the opponent. At a very high level, the strategy is to block your opponent into a smaller area than yourself so that you have the most available moves left yourself. But to be honest, I am writing this introduction before I have even written my first bot, so I don't know the depth (pun intended) of how far this idea goes!
+The rules are very similar to the [Angel Problem](https://en.wikipedia.org/wiki/Angel_problem), except the two agents are pitted against another in containing the opponent. At a very high level, the strategy is to block your opponent into a smaller area than yourself so that you have the most available moves left yourself. But to be honest, I am writing this introduction before I have even written my first bot, so I don't know the depth (pun intended) of how far this idea goes!
 
 # Installation
 
