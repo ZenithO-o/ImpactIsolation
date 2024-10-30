@@ -1,3 +1,4 @@
+import logging
 import pygame
 from impact_isolation.game.agent import Agent
 from impact_isolation.game.isolation import Isolation, IsolationConfig
@@ -15,6 +16,8 @@ SCREEN_CENTER = pygame.Vector2(SCREEN_SIZE[0] / 2, SCREEN_SIZE[1] / 2)
 TILE_SIZE = 40
 TILE_GAP = 4
 
+logger = logging.getLogger(__name__)
+
 
 class InteractiveRender:
     def __init__(self, game: Isolation) -> None:
@@ -25,8 +28,8 @@ class InteractiveRender:
     def _render_board(self):
         board = self.game.board
 
-        agent_positions = set([agent._position for agent in self.game.agents])
-        active_agent = self.game.agents[self.game.current_turn]
+        agent_positions = set([agent._position for agent in board.agents])
+        active_agent = self.game.current_agent
         active_moves = set(active_agent.valid_moves())
 
         FULL_SIZE = (TILE_SIZE * board._size) + (TILE_GAP * (board._size - 1))
@@ -39,7 +42,7 @@ class InteractiveRender:
                 color = colors["empty"]
                 if (y, x) in agent_positions:
                     color = colors["agent"]
-                elif (y, x) in active_moves:
+                elif active_moves and (y, x) in active_moves:
                     color = colors["move"]
                 elif value != 0:
                     color = colors["filled"]
@@ -75,13 +78,18 @@ class InteractiveRender:
                 if event.type == pygame.QUIT:
                     self.running = False
                 elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        try:
+                            self.game.undo_turn()
+                        except ValueError as err:
+                            logger.error(err)
                     if event.key == pygame.K_e:
-                        self.game._make_turn()
+                        self.game.run_turn()
                     if event.key == pygame.K_r:
                         self._auto_run = True
-            
+
             if self._auto_run and self.game.get_winner() == -1:
-                self.game._make_turn()
+                self.game.run_turn()
 
             # fill the screen with a color to wipe away anything from last frame
             self.screen.fill(colors["bg"])
